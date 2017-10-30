@@ -22,7 +22,7 @@
         }, 
         {
             "path": "temp/m3q.assets", 
-            "local": "%M3Q_ASSETS%", 
+            "local": "%M3Q_ASS2ETS%",
             "type": "git", 
             "name": "M3Q ASSETS", 
             "commit": "29ac12876ae634b002871e6e300ba9994c95ba87"

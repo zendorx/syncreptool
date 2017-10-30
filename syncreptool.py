@@ -32,6 +32,7 @@ class Repository:
     def __init__(self, data):
         self.name = data["name"]
         self.type = data["type"]
+        self.path = ""
         self.path = data["path"]
         self.commit = data["commit"]
         self.local = False
@@ -45,8 +46,9 @@ class Repository:
         if "local" in data:
             self.local = True
             self.local_env = data["local"].replace('%','')
-            p = get_env(self.local_env)
             self.local_path = get_env(self.local_env)
+            if not self.local_path:
+                print Fore.RED + "ERROR: ENV VAR NOT FOUND OR EMPTY: " + Fore.CYAN + self.local_env + Style.RESET_ALL
 
 
     def get_full_url(self):
@@ -170,8 +172,12 @@ def update_to_commit(repository, commit):
 
 def clone_rep(repository):
     cwd = os.getcwd()
-    print Fore.CYAN + repository.path + Fore.YELLOW + ": not exists. Cloning.." + Style.RESET_ALL
+    print Fore.CYAN + repository.name + Fore.YELLOW + ": not exists. Cloning.." + Style.RESET_ALL
     url = repository.get_full_url()
+
+    if not url:
+        print Fore.RED + "ERROR: URL OR PATH IS EMPTY: " + Fore.YELLOW + repository.name + Style.RESET_ALL
+        return
 
     if repository.type == "git":
         command = "git clone " + url + " " + repository.path
