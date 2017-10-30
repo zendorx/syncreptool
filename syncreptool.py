@@ -189,7 +189,22 @@ def clone_rep(repository):
     print repository.path + ": " + Fore.RED + " Cloning failed!" + Style.RESET_ALL
     return
 
+def print_info(config):
+    print "NDK:\t\t" + config.ndk
+    print "REAL NDK:\t" + get_env("NDK_ROOT")
 
+    for r in config.reps:
+        print "---------------------------------------------------------"
+        print "NAME:\t\t" + r.name
+        print "PATH:\t\t" + r.path
+        print "COMMIT:\t\t" + r.commit
+        print "REAL COMMIT:\t" + get_rep_hash(r)
+        if r.manual:
+            print "MANUAL:\t\t" + str(r.manual)
+
+        if r.local_env:
+            print "LOCAL:\t\t" + "%" + r.local_env + "%"
+        print
 
 def update_rep(repository):
     pass
@@ -246,7 +261,7 @@ if __name__ == "__main__":
         action = sys.argv[1]
 
     if action == "none":
-        action = raw_input('Enter action(sync, save, init, update, ndk): ')
+        action = raw_input('Enter action(sync, save, init, info, update, ndk): ')
 
     if action == "sync":
         config = Config(current_config)
@@ -257,6 +272,10 @@ if __name__ == "__main__":
         config = Config(current_config)
         save_reps(config)
         config.save(current_config)
+
+    if action == "info":
+        config = Config(current_config)
+        print_info(config)
 
     if action == "ndk":
         config = Config(current_config)
