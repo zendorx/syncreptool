@@ -1,0 +1,2 @@
+# syncreptool
+Allows sync repositiories
