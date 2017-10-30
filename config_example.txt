@@ -1,0 +1,30 @@
+{
+    "ndk": "android-ndk-r15c", 
+    "reps": [
+        {
+            "path": "temp/oxygine-framework", 
+            "type": "git", 
+            "name": "oxygine/oxygine-framework", 
+            "commit": "49ab35f81b79eef03264f2f621fe20cd7a8bf320"
+        }, 
+        {
+            "path": "temp/oxygine-magicparticles", 
+            "type": "hg", 
+            "name": "oxygine/oxygine-magicparticles", 
+            "commit": "82e0dcf9857b3dcc9775fdd79404ed1079303760"
+        }, 
+        {
+            "path": "temp/oxygine-sound", 
+            "type": "git", 
+            "name": "oxygine/oxygine-sound", 
+            "commit": "29ac12876ae634b002871e6e300ba9994c95ba87"
+        }, 
+        {
+            "path": "temp/m3q.assets", 
+            "local": "%M3Q_ASSETS%", 
+            "type": "git", 
+            "name": "M3Q ASSETS", 
+            "commit": "29ac12876ae634b002871e6e300ba9994c95ba87"
+        }
+    ]
+}

@@ -36,6 +36,7 @@ class Repository:
         self.commit = data["commit"]
         self.local = False
         self.local_path = ""
+        self.local_env = ""
 
         if "local" in data:
             self.local = True
@@ -70,12 +71,26 @@ class Config:
             self.ndk = data["ndk"]
 
     def save(self, fname):
-        pass
+        data = {}
+        data["ndk"] = self.ndk
+        data["reps"] = []
+        for r in self.reps:
+            rep = {}
+            rep["name"] = r.name
+            rep["type"] = r.type
+            rep["path"] = r.path
+            rep["commit"] = r.commit
+            if r.local_env:
+                rep["local"] = '%' + r.local_env + '%'
+            data["reps"].append(rep)
+
+        with open(fname, 'w') as config_file:
+            config_file.write(json.dumps(data, indent=4))
 
     def check_ndk(self):
         cndk = self.read_ndk()
         if self.ndk != cndk:
-            print Fore.YELLOW + "Warrning! DIFFERENT NDK" + Style.RESET_ALL
+            print "\n" + Fore.YELLOW + "Warrning! DIFFERENT NDK" + Style.RESET_ALL
             print "Current NDK: " + Fore.RED + cndk + Style.RESET_ALL
             print "Need NDK: " + Fore.MAGENTA + self.ndk + Style.RESET_ALL
         else:
