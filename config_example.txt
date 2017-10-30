@@ -3,7 +3,8 @@
     "reps": [
         {
             "path": "temp/oxygine-framework", 
-            "type": "git", 
+            "type": "git",
+            "manual": true,
             "name": "oxygine/oxygine-framework", 
             "commit": "49ab35f81b79eef03264f2f621fe20cd7a8bf320"
         }, 

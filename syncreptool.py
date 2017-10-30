@@ -37,6 +37,10 @@ class Repository:
         self.local = False
         self.local_path = ""
         self.local_env = ""
+        self.manual = False
+
+        if "manual" in data:
+            self.manual = data["manual"]
 
         if "local" in data:
             self.local = True
@@ -80,8 +84,13 @@ class Config:
             rep["type"] = r.type
             rep["path"] = r.path
             rep["commit"] = r.commit
+
+            if r.manual:
+                rep["manual"] = True
+
             if r.local_env:
                 rep["local"] = '%' + r.local_env + '%'
+
             data["reps"].append(rep)
 
         with open(fname, 'w') as config_file:
@@ -198,8 +207,11 @@ def sync_reps(config):
             if curhash == r.commit:
                 print r.name + ": " + Fore.BLUE + "No changes. " + Style.RESET_ALL
             else:
-                print r.name + ": " + Fore.CYAN + "Updating..." + Style.RESET_ALL
-                update_to_commit(r, r.commit)
+                if r.manual:
+                    print r.name + ": " + Fore.YELLOW + "DIFFERENT. (repository is manual)" + Style.RESET_ALL
+                else:
+                    print r.name + ": " + Fore.CYAN + "Updating..." + Style.RESET_ALL
+                    update_to_commit(r, r.commit)
 
 
 
@@ -221,8 +233,11 @@ def save_reps(config):
         if r.commit == curhash:
             print r.name + ": " + Fore.BLUE + "No changes. " + Style.RESET_ALL
         else:
-            r.commit = curhash
-            print r.name + ": " + Fore.MAGENTA + "Changed." + Style.RESET_ALL
+            if r.manual:
+                print r.name + ": " + Fore.YELLOW + "DIFFERENT. (repository is manual)" + Style.RESET_ALL
+            else:
+                r.commit = curhash
+                print r.name + ": " + Fore.MAGENTA + "Changed." + Style.RESET_ALL
 
 action = "sync"
 
