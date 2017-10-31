@@ -9,7 +9,7 @@ import sys
 
 
 current_dir = os.getcwd()
-current_config = "config.txt"
+current_config = "sync_reps.cfg"
 protocol = ""
 action = "none"
 
@@ -32,7 +32,6 @@ class Repository:
     def __init__(self, data):
         self.name = data["name"]
         self.type = data["type"]
-        self.path = ""
         self.path = data["path"]
         self.commit = data["commit"]
         self.local = False
@@ -197,7 +196,7 @@ def clone_rep(repository):
 
 def print_info(config):
     print "NDK:\t\t" + config.ndk
-    print "REAL NDK:\t" + get_env("NDK_ROOT")
+    print "REAL NDK:\t" + config.read_ndk()
 
     for r in config.reps:
         print "---------------------------------------------------------"
@@ -212,8 +211,39 @@ def print_info(config):
             print "LOCAL:\t\t" + "%" + r.local_env + "%"
         print
 
-def update_rep(repository):
-    pass
+
+def update_reps(config):
+    cwd = os.getcwd()
+    print "---------------------------------------------------------"
+    for r in config.reps:
+        if not os.path.exists(r.path):
+            if not os.path.exists(r.path):
+                print "Repository not exists: ", r.name, " - ", r.type, Style.RESET_ALL
+                clone_rep(r)
+        else:
+            print Fore.CYAN + "Processing: " + Style.RESET_ALL + r.name
+            if r.type == "hg":
+                os.chdir(r.path)
+                command = "hg pull"
+                os.system(command)
+                command = "hg update -c"
+                os.system(command)
+
+            if r.type == "git":
+                os.chdir(r.path)
+                command = "git pull"
+                os.system(command)
+                command = "git reset --keep HEAD"
+                os.system(command)
+
+            os.chdir(cwd)
+            curhash = get_rep_hash(r)
+            if curhash != r.commit:
+                print r.name + ": " + Fore.YELLOW + "UPDATED" + Style.RESET_ALL
+            print "---------------------------------------------------------\n"
+
+
+
 
 def sync_reps(config):
     for r in config.reps:
@@ -260,7 +290,6 @@ def save_reps(config):
                 r.commit = curhash
                 print r.name + ": " + Fore.MAGENTA + "Changed." + Style.RESET_ALL
 
-action = "sync"
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
@@ -268,6 +297,9 @@ if __name__ == "__main__":
 
     if action == "none":
         action = raw_input('Enter action(sync, save, init, info, update, ndk): ')
+
+    if not action:
+        action = "info"
 
     if action == "sync":
         config = Config(current_config)
@@ -289,13 +321,8 @@ if __name__ == "__main__":
         config.save(current_config)
 
     if action == "update":
-        print "not implemented"
+        config = Config(current_config)
+        update_reps(config)
 
     if action == "init":
         print "not implemented"
-
-
-
-
-
-
