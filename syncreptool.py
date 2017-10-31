@@ -216,6 +216,11 @@ def update_reps(config):
     cwd = os.getcwd()
     print "---------------------------------------------------------"
     for r in config.reps:
+        if r.manual:
+            print r.name + ": " + Fore.YELLOW + "SKIPPING. (repository is manual)" + Style.RESET_ALL
+            print "---------------------------------------------------------\n"
+            continue
+
         if not os.path.exists(r.path):
             if not os.path.exists(r.path):
                 print "Repository not exists: ", r.name, " - ", r.type, Style.RESET_ALL
@@ -239,7 +244,7 @@ def update_reps(config):
             os.chdir(cwd)
             curhash = get_rep_hash(r)
             if curhash != r.commit:
-                print r.name + ": " + Fore.YELLOW + "UPDATED" + Style.RESET_ALL
+                print r.name + ": " + Fore.GREEN + "UPDATED" + Style.RESET_ALL
             print "---------------------------------------------------------\n"
 
 
